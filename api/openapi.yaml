@@ -1,0 +1,59 @@
+openapi: 3.0.3
+info:
+  title: Table Booking Service API
+  version: 1.0.0
+  description: API управления столиками и бронированиями
+paths:
+  /api/v1/bookings:
+    post:
+      summary: Создать новое бронирование
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - table_id
+                - booking_date
+                - start_time
+                - guest_count
+                - customer_phone
+              properties:
+                table_id:
+                  type: integer
+                  example: 5
+                booking_date:
+                  type: string
+                  format: date
+                  example: "2026-11-20"
+                start_time:
+                  type: string
+                  example: "19:00"
+                guest_count:
+                  type: integer
+                  minimum: 1
+                  maximum: 10
+                  example: 4
+                customer_phone:
+                  type: string
+                  pattern: '^\+7\d{10}$'
+                  example: "+79991234567"
+      responses:
+        '201':
+          description: Бронирование успешно создано
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  booking_id:
+                    type: integer
+                    example: 1042
+                  status:
+                    type: string
+                    example: "CONFIRMED"
+        '400':
+          description: Ошибка валидации параметров запроса
+        '409':
+          description: Выбранный стол уже занят на указанное время
